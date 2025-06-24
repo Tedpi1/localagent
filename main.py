@@ -1,6 +1,6 @@
 from langchain_ollama.llms import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
-from vectory import retriever
+from vector import retriever
 
 model=OllamaLLM(
     model="llama3.2",
@@ -14,8 +14,15 @@ here is the question to answer{question}
 """
 
 prompt=ChatPromptTemplate.from_template(template)
-
 chain=prompt | model
 
-result=chain.invoke({"reviews": [], "question": "What is the best desktop computer for building AI agents?"})
-print(result)
+while True:
+    print("\n\n-------------------------")
+    question=input("Enter your question (q to quit): ")
+    if question.lower() == "q":
+        break
+    reviews=retriever.invoke(question)
+    
+
+    result=chain.invoke({"reviews": reviews, "question": question})
+    print(result)
